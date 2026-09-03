@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -18,12 +18,9 @@ import {
   Star,
   Truck,
   Sprout,
-  ChevronRight,
   ArrowRight,
   Heart,
-  Sun,
-  Droplets,
-  Shield,
+  ChevronRight,
   Package,
   Phone,
   Mail,
@@ -31,8 +28,7 @@ import {
   Instagram,
   Facebook,
   Twitter,
-  CheckCircle,
-  Quote
+  CheckCircle
 } from "lucide-react"
 
 export default function HomePage() {
@@ -42,6 +38,7 @@ export default function HomePage() {
   const [newsletterSubmitting, setNewsletterSubmitting] = useState(false)
   const [newsletterSuccess, setNewsletterSuccess] = useState(false)
   const [newsletterError, setNewsletterError] = useState("")
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -69,6 +66,12 @@ export default function HomePage() {
     }
   }
 
+  const scrollCarousel = () => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" })
+    }
+  }
+
   const featuredPlants = [
     {
       id: 1,
@@ -76,7 +79,7 @@ export default function HomePage() {
       price: "$59.00",
       image: "/images/product-1.png",
       badge: "Best Seller",
-      badgeColor: "bg-amber-500 text-white"
+      badgeColor: "bg-amber-600 text-white"
     },
     {
       id: 2,
@@ -84,7 +87,7 @@ export default function HomePage() {
       price: "$49.00",
       image: "/images/product-2.png",
       badge: "Low Light",
-      badgeColor: "bg-indigo-500 text-white"
+      badgeColor: "bg-slate-500 text-white"
     },
     {
       id: 3,
@@ -92,7 +95,7 @@ export default function HomePage() {
       price: "$79.00",
       image: "/images/product-3.png",
       badge: "Easy Care",
-      badgeColor: "bg-emerald-500 text-white"
+      badgeColor: "bg-emerald-600 text-white"
     },
     {
       id: 4,
@@ -100,7 +103,7 @@ export default function HomePage() {
       price: "$29.00",
       image: "/images/product-1.png",
       badge: "Trending",
-      badgeColor: "bg-purple-500 text-white"
+      badgeColor: "bg-slate-600 text-white"
     },
     {
       id: 5,
@@ -108,28 +111,7 @@ export default function HomePage() {
       price: "$39.00",
       image: "/images/product-2.png",
       badge: "Air Purifying",
-      badgeColor: "bg-teal-500 text-white"
-    }
-  ]
-
-  const testimonials = [
-    {
-      name: "María García",
-      role: "Plant Parent",
-      content: "Mis plantas llegaron en perfecto estado. El servicio de atención es excepcional y las instrucciones de cuidado son muy útiles.",
-      rating: 5
-    },
-    {
-      name: "Carlos Rodríguez",
-      role: "Interior Designer",
-      content: "La calidad de las plantas es increíble. Uso PlantHub para todos mis proyectos de diseño de interiores.",
-      rating: 5
-    },
-    {
-      name: "Ana Martínez",
-      role: "First Time Buyer",
-      content: "Nunca había tenido plantas antes, pero gracias a las guías de cuidado ahora tengo una selva en casa.",
-      rating: 5
+      badgeColor: "bg-emerald-700 text-white"
     }
   ]
 
@@ -138,17 +120,17 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
-                <Sprout className="w-6 h-6 text-white" />
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
+                <Sprout className="w-5 h-5 text-white" />
               </div>
-              <span className="font-serif text-2xl font-medium" style={{ color: "#2D3B36" }}>PlantHub</span>
+              <span className="font-medium text-lg" style={{ color: "#2D3B36" }}>Project 1788412935117</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-10">
+            <div className="hidden md:flex items-center gap-8">
               <Link href="#products" className="text-sm font-medium hover:opacity-70 transition-opacity" style={{ color: "#2D3B36" }}>
                 Shop Plants
               </Link>
@@ -167,23 +149,23 @@ export default function HomePage() {
             </div>
 
             {/* Right Icons */}
-            <div className="hidden md:flex items-center gap-5">
-              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
+            <div className="hidden md:flex items-center gap-4">
+              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <Search className="w-5 h-5" style={{ color: "#2D3B36" }} />
               </button>
-              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
+              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                 <User className="w-5 h-5" style={{ color: "#2D3B36" }} />
               </button>
-              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors relative">
+              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
                 <ShoppingCart className="w-5 h-5" style={{ color: "#2D3B36" }} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 text-xs text-white rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 text-[10px] text-white rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
                     {cartCount}
                   </span>
                 )}
               </button>
               <Button
-                className="rounded-full px-7 py-2.5 text-white font-medium"
+                className="rounded-full px-5 py-2 text-white text-sm font-medium"
                 style={{ backgroundColor: "#1B5E3F" }}
               >
                 Plant Finder
@@ -233,45 +215,45 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section - Full bleed images */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#F9F7F4" }}>
-        {/* Left Decorative Plant */}
-        <div className="absolute left-0 top-0 bottom-0 w-1/4 md:w-1/3 lg:w-2/5">
+        {/* Left Plant Image - Full bleed */}
+        <div className="absolute left-0 top-0 bottom-0 w-[30%] lg:w-[35%]">
           <Image
             src="/images/hero.png"
             alt="Decorative plant left"
             fill
             className="object-cover object-right"
+            style={{ objectPosition: "right center" }}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#F9F7F4]" />
         </div>
 
-        {/* Right Decorative Plant */}
-        <div className="absolute right-0 top-0 bottom-0 w-1/4 md:w-1/3 lg:w-2/5">
+        {/* Right Plant Image - Full bleed */}
+        <div className="absolute right-0 top-0 bottom-0 w-[30%] lg:w-[35%]">
           <Image
             src="/images/feature.png"
             alt="Decorative plant right"
             fill
             className="object-cover object-left"
+            style={{ objectPosition: "left center" }}
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#F9F7F4]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-40">
-          <div className="text-center max-w-3xl mx-auto">
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6" style={{ color: "#2D3B36" }}>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="text-center max-w-2xl mx-auto">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl mb-5 italic" style={{ color: "#2D3B36" }}>
               Bring Life Home
             </h1>
-            <p className="text-lg md:text-xl mb-10" style={{ color: "#6B8E7F" }}>
+            <p className="text-base md:text-lg mb-8" style={{ color: "#6B8E7F" }}>
               Beautiful plants. Expert care. Thoughtful service.
               <br />
               Everything you need to create a space that grows.
             </p>
             <Button
               size="lg"
-              className="rounded-full px-12 py-7 text-white text-lg font-medium shadow-lg"
+              className="rounded-full px-10 py-6 text-white text-base font-medium"
               style={{ backgroundColor: "#1B5E3F" }}
               asChild
             >
@@ -279,78 +261,78 @@ export default function HomePage() {
             </Button>
           </div>
         </div>
-      </section>
 
-      {/* Stats Banner */}
-      <section className="bg-white py-10 shadow-sm border-y border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
-                <Sprout className="w-7 h-7" style={{ color: "#1B5E3F" }} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>10,000+</p>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>Happy Plant Parents</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
-                <Leaf className="w-7 h-7" style={{ color: "#1B5E3F" }} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>500+</p>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>Curated Plants</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
-                <Award className="w-7 h-7" style={{ color: "#1B5E3F" }} />
-              </div>
-              <div>
-                <div className="flex items-center gap-1">
-                  <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>4.9</p>
-                  <Star className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+        {/* Stats Banner - Card style overlapping hero */}
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mb-12">
+          <div className="bg-white rounded-2xl shadow-lg py-6 px-8">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-0 md:divide-x divide-gray-200">
+              <div className="flex items-center gap-3 md:px-4 first:pl-0 last:pr-0">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Sprout className="w-6 h-6" style={{ color: "#1B5E3F" }} />
                 </div>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>Customer Rating</p>
+                <div>
+                  <p className="text-lg font-semibold" style={{ color: "#2D3B36" }}>10,000+</p>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>Happy Plant Parents</p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
-                <Truck className="w-7 h-7" style={{ color: "#1B5E3F" }} />
+              <div className="flex items-center gap-3 md:px-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Leaf className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold" style={{ color: "#2D3B36" }}>500+</p>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>Curated Plants</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>Fast & Safe</p>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>Nationwide Delivery</p>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
-                <Heart className="w-7 h-7" style={{ color: "#1B5E3F" }} />
+              <div className="flex items-center gap-3 md:px-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Award className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1">
+                    <p className="text-lg font-semibold" style={{ color: "#2D3B36" }}>4.9</p>
+                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  </div>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>Customer Rating</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>Sustainably</p>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>Grown & Sourced</p>
+
+              <div className="flex items-center gap-3 md:px-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Truck className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold" style={{ color: "#2D3B36" }}>Fast & Safe</p>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>Nationwide Delivery</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 md:px-4">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Heart className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold" style={{ color: "#2D3B36" }}>Sustainably</p>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>Grown & Sourced</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Featured Plants */}
-      <section id="products" className="py-16 md:py-24" style={{ backgroundColor: "#F9F7F4" }}>
+      {/* Featured Plants - Horizontal Carousel */}
+      <section id="products" className="pt-24 pb-16" style={{ backgroundColor: "#F9F7F4" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-10">
-            <h2 className="font-serif text-3xl md:text-4xl" style={{ color: "#2D3B36" }}>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="font-serif text-3xl italic" style={{ color: "#2D3B36" }}>
               Featured Plants
             </h2>
             <Link
               href="#all-plants"
-              className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity"
+              className="flex items-center gap-1 text-sm font-medium hover:opacity-70 transition-opacity"
               style={{ color: "#1B5E3F" }}
             >
               View all plants
@@ -358,59 +340,72 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {featuredPlants.map((plant) => (
-              <Card
-                key={plant.id}
-                className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="relative aspect-square overflow-hidden">
-                  <Image
-                    src={plant.image}
-                    alt={plant.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-semibold px-3 py-1 rounded-full shadow-sm`}>
-                    {plant.badge}
-                  </Badge>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-medium text-sm mb-1" style={{ color: "#2D3B36" }}>
-                    {plant.name}
-                  </h3>
-                  <p className="font-semibold" style={{ color: "#1B5E3F" }}>
-                    {plant.price}
-                  </p>
-                </div>
-              </Card>
-            ))}
+          <div className="relative">
+            <div
+              ref={carouselRef}
+              className="flex gap-5 overflow-x-auto scrollbar-hide pb-4"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {featuredPlants.map((plant) => (
+                <Card
+                  key={plant.id}
+                  className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow flex-shrink-0"
+                  style={{ width: "200px" }}
+                >
+                  <div className="relative aspect-square overflow-hidden">
+                    <Image
+                      src={plant.image}
+                      alt={plant.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-[10px] font-medium px-2 py-0.5 rounded`}>
+                      {plant.badge}
+                    </Badge>
+                  </div>
+                  <div className="p-3">
+                    <h3 className="font-medium text-sm mb-0.5" style={{ color: "#2D3B36" }}>
+                      {plant.name}
+                    </h3>
+                    <p className="font-semibold text-sm" style={{ color: "#1B5E3F" }}>
+                      {plant.price}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Carousel Navigation Arrow */}
+            <button
+              onClick={scrollCarousel}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-shadow z-10"
+            >
+              <ChevronRight className="w-5 h-5" style={{ color: "#2D3B36" }} />
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Features Bento */}
-      <section id="about" className="py-16 md:py-24" style={{ backgroundColor: "#F9F7F4" }}>
+      {/* Rooted in Quality & Care - 4 cards in horizontal row */}
+      <section id="about" className="py-16" style={{ backgroundColor: "#F9F7F4" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-12 gap-6">
+          <div className="grid lg:grid-cols-12 gap-8 items-start">
             {/* Left Text Section */}
-            <div className="md:col-span-3 flex flex-col justify-center">
-              <div className="mb-4">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
-                  <Sprout className="w-6 h-6" style={{ color: "#1B5E3F" }} />
-                </div>
+            <div className="lg:col-span-3">
+              <div className="mb-3">
+                <Sprout className="w-6 h-6" style={{ color: "#1B5E3F" }} />
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
+              <h2 className="font-serif text-2xl md:text-3xl mb-3 italic" style={{ color: "#2D3B36" }}>
                 Rooted in
                 <br />
                 Quality & Care
               </h2>
-              <p className="mb-6" style={{ color: "#6B8E7F" }}>
+              <p className="text-sm mb-4" style={{ color: "#6B8E7F" }}>
                 From our greenhouse to your home, we make plant parenthood simple, joyful, and rewarding.
               </p>
               <Link
                 href="#learn-more"
-                className="flex items-center gap-2 text-sm font-medium hover:opacity-70 transition-opacity"
+                className="flex items-center gap-1 text-sm font-medium hover:opacity-70 transition-opacity"
                 style={{ color: "#1B5E3F" }}
               >
                 Learn more about us
@@ -418,301 +413,100 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Feature Cards - Horizontal with overlays */}
-            <div className="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
-                <Image
-                  src="/images/feature.png"
-                  alt="Expertly Curated"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
-                      <Leaf className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-white text-lg">Expertly Curated</h3>
+            {/* 4 Feature Cards in a Row */}
+            <div className="lg:col-span-9 grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="flex flex-col">
+                <div className="relative h-32 rounded-t-xl overflow-hidden">
+                  <Image
+                    src="/images/feature.png"
+                    alt="Expertly Curated"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="bg-white rounded-b-xl p-4 flex-1 -mt-4 relative z-10 mx-1 shadow-sm">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: "#E8F5E9" }}>
+                    <Leaf className="w-4 h-4" style={{ color: "#1B5E3F" }} />
                   </div>
-                  <p className="text-sm text-white/90">
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: "#2D3B36" }}>Expertly Curated</h3>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>
                     Handpicked plants for every space and skill level.
                   </p>
                 </div>
-              </Card>
+              </div>
 
-              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
-                <Image
-                  src="/images/product-1.png"
-                  alt="Plant Care Support"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
-                      <Sun className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-white text-lg">Plant Care Support</h3>
+              <div className="flex flex-col">
+                <div className="relative h-32 rounded-t-xl overflow-hidden">
+                  <Image
+                    src="/images/product-1.png"
+                    alt="Plant Care Support"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="bg-white rounded-b-xl p-4 flex-1 -mt-4 relative z-10 mx-1 shadow-sm">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: "#E8F5E9" }}>
+                    <Sprout className="w-4 h-4" style={{ color: "#1B5E3F" }} />
                   </div>
-                  <p className="text-sm text-white/90">
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: "#2D3B36" }}>Plant Care Support</h3>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>
                     Guides, tips, and real people here to help your plants thrive.
                   </p>
                 </div>
-              </Card>
+              </div>
 
-              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
-                <Image
-                  src="/images/product-2.png"
-                  alt="Safe Delivery"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
-                      <Package className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-white text-lg">Safe & Reliable Delivery</h3>
+              <div className="flex flex-col">
+                <div className="relative h-32 rounded-t-xl overflow-hidden">
+                  <Image
+                    src="/images/product-2.png"
+                    alt="Safe & Reliable Delivery"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="bg-white rounded-b-xl p-4 flex-1 -mt-4 relative z-10 mx-1 shadow-sm">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: "#E8F5E9" }}>
+                    <Package className="w-4 h-4" style={{ color: "#1B5E3F" }} />
                   </div>
-                  <p className="text-sm text-white/90">
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: "#2D3B36" }}>Safe & Reliable Delivery</h3>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>
                     Carefully packed and delivered fresh to your door.
                   </p>
                 </div>
-              </Card>
+              </div>
 
-              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
-                <Image
-                  src="/images/product-3.png"
-                  alt="Sustainability"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
-                      <Heart className="w-5 h-5 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-white text-lg">Sustainability Promise</h3>
+              <div className="flex flex-col">
+                <div className="relative h-32 rounded-t-xl overflow-hidden">
+                  <Image
+                    src="/images/product-3.png"
+                    alt="Sustainably Promise"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="bg-white rounded-b-xl p-4 flex-1 -mt-4 relative z-10 mx-1 shadow-sm">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center mb-2" style={{ backgroundColor: "#E8F5E9" }}>
+                    <Heart className="w-4 h-4" style={{ color: "#1B5E3F" }} />
                   </div>
-                  <p className="text-sm text-white/90">
-                    We are committed to people and the planet.
+                  <h3 className="font-semibold text-sm mb-1" style={{ color: "#2D3B36" }}>Sustainably Promise</h3>
+                  <p className="text-xs" style={{ color: "#6B8E7F" }}>
+                    We&apos;re committed to people and the planet.
                   </p>
                 </div>
-              </Card>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Products Grid */}
-      <section id="all-plants" className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
-              Shop by Category
-            </h2>
-            <p style={{ color: "#6B8E7F" }}>
-              Find the perfect plant for your space and lifestyle
-            </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3 mb-12">
-            {["All Plants", "Pet Safe", "Low Light", "Easy Care", "Air Purifying", "Large Plants"].map((category, index) => (
-              <Button
-                key={category}
-                variant={index === 0 ? "default" : "outline"}
-                className="rounded-full"
-                style={index === 0 ? { backgroundColor: "#1B5E3F" } : { borderColor: "#1B5E3F", color: "#1B5E3F" }}
-              >
-                {category}
-              </Button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[...featuredPlants, ...featuredPlants.slice(0, 3)].map((plant, index) => (
-              <Card
-                key={`${plant.id}-${index}`}
-                className="group bg-white rounded-2xl overflow-hidden border shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="relative aspect-square overflow-hidden">
-                  <Image
-                    src={plant.image}
-                    alt={plant.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-semibold px-3 py-1 rounded-full shadow-sm`}>
-                    {plant.badge}
-                  </Badge>
-                  <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
-                    <Heart className="w-4 h-4" style={{ color: "#2D3B36" }} />
-                  </button>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-medium mb-1" style={{ color: "#2D3B36" }}>
-                    {plant.name}
-                  </h3>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sun className="w-4 h-4" style={{ color: "#6B8E7F" }} />
-                    <Droplets className="w-4 h-4" style={{ color: "#6B8E7F" }} />
-                  </div>
-                  <p className="font-semibold" style={{ color: "#1B5E3F" }}>
-                    {plant.price}
-                  </p>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full px-8"
-              style={{ borderColor: "#1B5E3F", color: "#1B5E3F" }}
-            >
-              Load More Plants
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Process Steps */}
-      <section id="care" className="py-16 md:py-24" style={{ backgroundColor: "#F9F7F4" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
-              How It Works
-            </h2>
-            <p style={{ color: "#6B8E7F" }}>
-              Getting your perfect plant is simple
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { step: "01", title: "Browse & Choose", description: "Explore our curated collection and find plants that match your space and lifestyle.", icon: Search },
-              { step: "02", title: "We Pack with Care", description: "Each plant is carefully packaged to ensure it arrives healthy and happy.", icon: Package },
-              { step: "03", title: "Fast Delivery", description: "Your plants are delivered right to your door, nationwide.", icon: Truck },
-              { step: "04", title: "Watch it Thrive", description: "Use our care guides and support to help your plants flourish.", icon: Sprout }
-            ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: "#1B5E3F" }}>
-                  <item.icon className="w-8 h-8 text-white" />
-                </div>
-                <p className="text-sm font-semibold mb-2" style={{ color: "#6B8E7F" }}>{item.step}</p>
-                <h3 className="font-semibold text-lg mb-2" style={{ color: "#2D3B36" }}>{item.title}</h3>
-                <p className="text-sm" style={{ color: "#6B8E7F" }}>{item.description}</p>
-                {index < 3 && (
-                  <ChevronRight className="hidden md:block w-6 h-6 absolute top-1/2 -right-4 transform -translate-y-1/2" style={{ color: "#6B8E7F" }} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
-              What Plant Parents Say
-            </h2>
-            <p style={{ color: "#6B8E7F" }}>
-              Join thousands of happy customers growing with us
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="p-6 rounded-2xl border-0 shadow-sm" style={{ backgroundColor: "#F9F7F4" }}>
-                <Quote className="w-8 h-8 mb-4" style={{ color: "#1B5E3F" }} />
-                <p className="mb-6" style={{ color: "#2D3B36" }}>
-                  {testimonial.content}
-                </p>
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <div>
-                  <p className="font-semibold" style={{ color: "#2D3B36" }}>{testimonial.name}</p>
-                  <p className="text-sm" style={{ color: "#6B8E7F" }}>{testimonial.role}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="py-16 md:py-24" style={{ backgroundColor: "#F9F7F4" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
-              Plant Subscription Plans
-            </h2>
-            <p style={{ color: "#6B8E7F" }}>
-              Get fresh plants delivered monthly
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {[
-              { name: "Starter", price: "Starting from $25/mo", features: ["1 small plant monthly", "Care instructions", "Email support"], popular: false },
-              { name: "Grower", price: "Starting from $49/mo", features: ["2 plants monthly", "Care kit included", "Priority support", "Free shipping"], popular: true },
-              { name: "Collector", price: "Starting from $99/mo", features: ["4 plants monthly", "Rare varieties", "Dedicated care expert", "Free shipping", "Early access"], popular: false }
-            ].map((plan, index) => (
-              <Card
-                key={index}
-                className={`p-6 rounded-2xl border-2 ${plan.popular ? "border-2" : "border-0"}`}
-                style={{
-                  borderColor: plan.popular ? "#1B5E3F" : "transparent",
-                  backgroundColor: "white"
-                }}
-              >
-                {plan.popular && (
-                  <Badge className="mb-4 text-white" style={{ backgroundColor: "#1B5E3F" }}>
-                    Most Popular
-                  </Badge>
-                )}
-                <h3 className="font-serif text-2xl mb-2" style={{ color: "#2D3B36" }}>{plan.name}</h3>
-                <p className="text-lg font-semibold mb-6" style={{ color: "#1B5E3F" }}>{plan.price}</p>
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm" style={{ color: "#6B8E7F" }}>
-                      <CheckCircle className="w-4 h-4" style={{ color: "#1B5E3F" }} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  className="w-full rounded-full text-white"
-                  variant={plan.popular ? "default" : "outline"}
-                  style={plan.popular ? { backgroundColor: "#1B5E3F" } : { borderColor: "#1B5E3F", color: "#1B5E3F" }}
-                >
-                  Subscribe Now
-                </Button>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Full */}
-      <section className="py-16 md:py-24 text-white" style={{ backgroundColor: "#1B5E3F" }}>
+      <section className="py-16 md:py-20 text-white" style={{ backgroundColor: "#1B5E3F" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-3xl md:text-5xl mb-6">
+            <h2 className="font-serif text-3xl md:text-4xl mb-5 italic">
               Ready to Start Your Plant Journey?
             </h2>
-            <p className="text-lg mb-8 opacity-90">
+            <p className="text-base mb-8 opacity-90">
               Join over 10,000 happy plant parents and transform your space with nature.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -738,14 +532,14 @@ export default function HomePage() {
       </section>
 
       {/* Newsletter Strip */}
-      <section className="py-12 bg-white">
+      <section className="py-10 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="font-serif text-2xl mb-2" style={{ color: "#2D3B36" }}>
+              <h3 className="font-serif text-xl mb-1 italic" style={{ color: "#2D3B36" }}>
                 Stay Rooted
               </h3>
-              <p style={{ color: "#6B8E7F" }}>
+              <p className="text-sm" style={{ color: "#6B8E7F" }}>
                 Subscribe for plant tips, exclusive offers, and new arrivals.
               </p>
             </div>
@@ -762,12 +556,12 @@ export default function HomePage() {
                   value={newsletterEmail}
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   required
-                  className="rounded-full px-6 min-w-[280px]"
+                  className="rounded-full px-5 min-w-[260px]"
                 />
                 <Button
                   type="submit"
                   disabled={newsletterSubmitting}
-                  className="rounded-full px-6 text-white"
+                  className="rounded-full px-5 text-white"
                   style={{ backgroundColor: "#1B5E3F" }}
                 >
                   {newsletterSubmitting ? "Subscribing..." : "Subscribe"}
@@ -780,15 +574,15 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer style={{ backgroundColor: "#2D3B36" }} className="text-white py-16">
+      <footer style={{ backgroundColor: "#2D3B36" }} className="text-white py-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+          <div className="grid md:grid-cols-4 gap-10 mb-10">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
-                  <Leaf className="w-5 h-5 text-white" />
+                <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
+                  <Leaf className="w-4 h-4 text-white" />
                 </div>
-                <span className="font-serif text-xl">PlantHub</span>
+                <span className="font-medium">PlantHub</span>
               </div>
               <p className="text-sm opacity-70 mb-4">
                 Bringing nature into homes since 2020. We are passionate about plants and helping you grow.
@@ -807,7 +601,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Shop</h4>
+              <h4 className="font-semibold mb-4 text-sm">Shop</h4>
               <ul className="space-y-2 text-sm opacity-70">
                 <li><Link href="#products" className="hover:opacity-100 transition-opacity">All Plants</Link></li>
                 <li><Link href="#products" className="hover:opacity-100 transition-opacity">Pet Safe Plants</Link></li>
@@ -818,7 +612,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Resources</h4>
+              <h4 className="font-semibold mb-4 text-sm">Resources</h4>
               <ul className="space-y-2 text-sm opacity-70">
                 <li><Link href="#care" className="hover:opacity-100 transition-opacity">Plant Care Guide</Link></li>
                 <li><Link href="#blog" className="hover:opacity-100 transition-opacity">Blog</Link></li>
@@ -829,7 +623,7 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 className="font-semibold mb-4 text-sm">Contact</h4>
               <ul className="space-y-3 text-sm opacity-70">
                 <li className="flex items-center gap-2">
                   <Mail className="w-4 h-4" />
@@ -842,7 +636,7 @@ export default function HomePage() {
                   <span>Available 9AM to 6PM</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 mt-1" />
+                  <MapPin className="w-4 h-4 mt-0.5" />
                   <span>Nationwide Delivery</span>
                 </li>
               </ul>
