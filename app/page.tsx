@@ -49,6 +49,10 @@ export default function HomePage() {
   const [plants, setPlants] = useState<Plant[]>([])
   const [plantsLoading, setPlantsLoading] = useState(true)
   const [plantsError, setPlantsError] = useState("")
+  const [newPlantName, setNewPlantName] = useState("")
+  const [newPlantPrice, setNewPlantPrice] = useState("")
+  const [newPlantDescription, setNewPlantDescription] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -97,6 +101,36 @@ export default function HomePage() {
   const scrollCarousel = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: 300, behavior: "smooth" })
+    }
+  }
+
+  const handleAddPlant = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/plants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newPlantName,
+          price: newPlantPrice,
+          description: newPlantDescription
+        })
+      })
+      if (response.ok) {
+        const plantsResponse = await fetch("/api/plants")
+        if (plantsResponse.ok) {
+          const data = await plantsResponse.json()
+          setPlants(data)
+        }
+        setNewPlantName("")
+        setNewPlantPrice("")
+        setNewPlantDescription("")
+      }
+    } catch {
+      // Error handling silently
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -351,6 +385,63 @@ export default function HomePage() {
               ))}
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Admin Section - Add New Plant */}
+      <section className="py-12" style={{ backgroundColor: "#F9F7F4" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-sm p-6 max-w-xl">
+            <h2 className="font-serif text-2xl mb-4 italic" style={{ color: "#2D3B36" }}>
+              Agregar Nueva Planta
+            </h2>
+            <form onSubmit={handleAddPlant} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Nombre
+                </label>
+                <Input
+                  type="text"
+                  value={newPlantName}
+                  onChange={(e) => setNewPlantName(e.target.value)}
+                  required
+                  className="w-full rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Precio
+                </label>
+                <Input
+                  type="text"
+                  value={newPlantPrice}
+                  onChange={(e) => setNewPlantPrice(e.target.value)}
+                  required
+                  className="w-full rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Descripcion
+                </label>
+                <textarea
+                  value={newPlantDescription}
+                  onChange={(e) => setNewPlantDescription(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-gray-200 p-2 text-sm"
+                  rows={3}
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full px-6 text-white"
+                style={{ backgroundColor: "#1B5E3F" }}
+              >
+                {isSubmitting ? "Agregando..." : "Agregar Planta"}
+              </Button>
+            </form>
+          </div>
         </div>
       </section>
 
