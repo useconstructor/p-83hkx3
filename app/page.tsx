@@ -53,6 +53,7 @@ export default function HomePage() {
   const [newPlantPrice, setNewPlantPrice] = useState("")
   const [newPlantDescription, setNewPlantDescription] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchPlants = async () => {
@@ -131,6 +132,22 @@ export default function HomePage() {
       // Error handling silently
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleDeletePlant = async (id: number) => {
+    setDeletingId(id)
+    try {
+      const response = await fetch(`/api/plants/${id}`, {
+        method: "DELETE"
+      })
+      if (response.ok) {
+        setPlants(plants.filter((plant) => plant.id !== id))
+      }
+    } catch {
+      // Error handling silently
+    } finally {
+      setDeletingId(null)
     }
   }
 
@@ -377,9 +394,18 @@ export default function HomePage() {
                     <p className="font-semibold text-lg mb-2" style={{ color: "#1B5E3F" }}>
                       ${plant.price.toFixed(2)}
                     </p>
-                    <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                    <p className="text-sm mb-3" style={{ color: "#6B8E7F" }}>
                       {plant.description}
                     </p>
+                    <Button
+                      onClick={() => handleDeletePlant(plant.id)}
+                      disabled={deletingId === plant.id}
+                      variant="outline"
+                      size="sm"
+                      className="rounded-full text-red-600 border-red-300 hover:bg-red-50"
+                    >
+                      {deletingId === plant.id ? "Eliminando..." : "Eliminar"}
+                    </Button>
                   </div>
                 </Card>
               ))}
