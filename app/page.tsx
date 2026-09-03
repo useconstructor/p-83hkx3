@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -31,6 +31,13 @@ import {
   CheckCircle
 } from "lucide-react"
 
+interface Plant {
+  id: number
+  name: string
+  price: number
+  description: string
+}
+
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartCount] = useState(2)
@@ -39,6 +46,27 @@ export default function HomePage() {
   const [newsletterSuccess, setNewsletterSuccess] = useState(false)
   const [newsletterError, setNewsletterError] = useState("")
   const carouselRef = useRef<HTMLDivElement>(null)
+  const [plants, setPlants] = useState<Plant[]>([])
+  const [plantsLoading, setPlantsLoading] = useState(true)
+  const [plantsError, setPlantsError] = useState("")
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const response = await fetch("/api/plants")
+        if (!response.ok) {
+          throw new Error("Error al cargar plantas")
+        }
+        const data = await response.json()
+        setPlants(data)
+      } catch {
+        setPlantsError("Error al cargar plantas. Intenta de nuevo.")
+      } finally {
+        setPlantsLoading(false)
+      }
+    }
+    fetchPlants()
+  }, [])
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -71,49 +99,6 @@ export default function HomePage() {
       carouselRef.current.scrollBy({ left: 300, behavior: "smooth" })
     }
   }
-
-  const featuredPlants = [
-    {
-      id: 1,
-      name: "Monstera Deliciosa",
-      price: "$59.00",
-      image: "/images/product-1.png",
-      badge: "Best Seller",
-      badgeColor: "bg-amber-600 text-white"
-    },
-    {
-      id: 2,
-      name: "Snake Plant Laurentii",
-      price: "$49.00",
-      image: "/images/product-2.png",
-      badge: "Low Light",
-      badgeColor: "bg-slate-500 text-white"
-    },
-    {
-      id: 3,
-      name: "Fiddle Leaf Fig",
-      price: "$79.00",
-      image: "/images/product-3.png",
-      badge: "Easy Care",
-      badgeColor: "bg-emerald-600 text-white"
-    },
-    {
-      id: 4,
-      name: "Pothos Golden",
-      price: "$29.00",
-      image: "/images/product-1.png",
-      badge: "Trending",
-      badgeColor: "bg-slate-600 text-white"
-    },
-    {
-      id: 5,
-      name: "Peace Lily",
-      price: "$39.00",
-      image: "/images/product-2.png",
-      badge: "Air Purifying",
-      badgeColor: "bg-emerald-700 text-white"
-    }
-  ]
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F9F7F4" }}>
@@ -323,7 +308,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Plants - Horizontal Carousel */}
+      {/* Featured Plants - Grid */}
       <section id="products" className="pt-24 pb-16" style={{ backgroundColor: "#F9F7F4" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8">
@@ -340,49 +325,32 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="relative">
-            <div
-              ref={carouselRef}
-              className="flex gap-5 overflow-x-auto scrollbar-hide pb-4"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {featuredPlants.map((plant) => (
+          {plantsLoading ? (
+            <p className="text-center py-8" style={{ color: "#6B8E7F" }}>Cargando plantas...</p>
+          ) : plantsError ? (
+            <p className="text-center py-8 text-red-500">{plantsError}</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {plants.map((plant) => (
                 <Card
                   key={plant.id}
-                  className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow flex-shrink-0"
-                  style={{ width: "200px" }}
+                  className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={plant.image}
-                      alt={plant.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-[10px] font-medium px-2 py-0.5 rounded`}>
-                      {plant.badge}
-                    </Badge>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-medium text-sm mb-0.5" style={{ color: "#2D3B36" }}>
+                  <div className="p-4">
+                    <h3 className="font-medium text-base mb-1" style={{ color: "#2D3B36" }}>
                       {plant.name}
                     </h3>
-                    <p className="font-semibold text-sm" style={{ color: "#1B5E3F" }}>
-                      {plant.price}
+                    <p className="font-semibold text-lg mb-2" style={{ color: "#1B5E3F" }}>
+                      ${plant.price.toFixed(2)}
+                    </p>
+                    <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                      {plant.description}
                     </p>
                   </div>
                 </Card>
               ))}
             </div>
-
-            {/* Carousel Navigation Arrow */}
-            <button
-              onClick={scrollCarousel}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-shadow z-10"
-            >
-              <ChevronRight className="w-5 h-5" style={{ color: "#2D3B36" }} />
-            </button>
-          </div>
+          )}
         </div>
       </section>
 
