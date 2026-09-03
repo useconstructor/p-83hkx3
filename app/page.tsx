@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -31,6 +31,13 @@ import {
   CheckCircle
 } from "lucide-react"
 
+interface Plant {
+  id: number
+  name: string
+  price: number
+  description: string
+}
+
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [cartCount] = useState(2)
@@ -39,6 +46,42 @@ export default function HomePage() {
   const [newsletterSuccess, setNewsletterSuccess] = useState(false)
   const [newsletterError, setNewsletterError] = useState("")
   const carouselRef = useRef<HTMLDivElement>(null)
+  const [plants, setPlants] = useState<Plant[]>([])
+  const [plantsLoading, setPlantsLoading] = useState(true)
+  const [plantsError, setPlantsError] = useState("")
+  const [newPlantName, setNewPlantName] = useState("")
+  const [newPlantPrice, setNewPlantPrice] = useState("")
+  const [newPlantDescription, setNewPlantDescription] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editName, setEditName] = useState("")
+  const [editPrice, setEditPrice] = useState("")
+  const [editDescription, setEditDescription] = useState("")
+  const [isSaving, setIsSaving] = useState(false)
+
+  const filteredPlants = plants.filter((plant) =>
+    plant.name.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const response = await fetch("/api/plants")
+        if (!response.ok) {
+          throw new Error("Error al cargar plantas")
+        }
+        const data = await response.json()
+        setPlants(data)
+      } catch {
+        setPlantsError("Error al cargar plantas. Intenta de nuevo.")
+      } finally {
+        setPlantsLoading(false)
+      }
+    }
+    fetchPlants()
+  }, [])
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,48 +115,98 @@ export default function HomePage() {
     }
   }
 
-  const featuredPlants = [
-    {
-      id: 1,
-      name: "Monstera Deliciosa",
-      price: "$59.00",
-      image: "/images/product-1.png",
-      badge: "Best Seller",
-      badgeColor: "bg-amber-600 text-white"
-    },
-    {
-      id: 2,
-      name: "Snake Plant Laurentii",
-      price: "$49.00",
-      image: "/images/product-2.png",
-      badge: "Low Light",
-      badgeColor: "bg-slate-500 text-white"
-    },
-    {
-      id: 3,
-      name: "Fiddle Leaf Fig",
-      price: "$79.00",
-      image: "/images/product-3.png",
-      badge: "Easy Care",
-      badgeColor: "bg-emerald-600 text-white"
-    },
-    {
-      id: 4,
-      name: "Pothos Golden",
-      price: "$29.00",
-      image: "/images/product-1.png",
-      badge: "Trending",
-      badgeColor: "bg-slate-600 text-white"
-    },
-    {
-      id: 5,
-      name: "Peace Lily",
-      price: "$39.00",
-      image: "/images/product-2.png",
-      badge: "Air Purifying",
-      badgeColor: "bg-emerald-700 text-white"
+  const handleAddPlant = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    try {
+      const response = await fetch("/api/plants", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newPlantName,
+          price: newPlantPrice,
+          description: newPlantDescription
+        })
+      })
+      if (response.ok) {
+        const plantsResponse = await fetch("/api/plants")
+        if (plantsResponse.ok) {
+          const data = await plantsResponse.json()
+          setPlants(data)
+        }
+        setNewPlantName("")
+        setNewPlantPrice("")
+        setNewPlantDescription("")
+      }
+    } catch {
+      // Error handling silently
+    } finally {
+      setIsSubmitting(false)
     }
-  ]
+  }
+
+  const handleDeletePlant = async (id: number) => {
+    if (!window.confirm("¿Estás seguro de que deseas eliminar esta planta?")) {
+      return
+    }
+    setDeletingId(id)
+    try {
+      const response = await fetch(`/api/plants/${id}`, {
+        method: "DELETE"
+      })
+      if (response.ok) {
+        setPlants(plants.filter((plant) => plant.id !== id))
+      }
+    } catch {
+      // Error handling silently
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleStartEdit = (plant: Plant) => {
+    setEditingId(plant.id)
+    setEditName(plant.name)
+    setEditPrice(plant.price.toString())
+    setEditDescription(plant.description)
+  }
+
+  const handleCancelEdit = () => {
+    setEditingId(null)
+    setEditName("")
+    setEditPrice("")
+    setEditDescription("")
+  }
+
+  const handleSaveEdit = async (id: number) => {
+    setIsSaving(true)
+    try {
+      const response = await fetch(`/api/plants/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          price: editPrice,
+          description: editDescription
+        })
+      })
+      if (response.ok) {
+        setPlants(plants.map((plant) =>
+          plant.id === id
+            ? { ...plant, name: editName, price: parseFloat(editPrice), description: editDescription }
+            : plant
+        ))
+        setEditingId(null)
+        setEditName("")
+        setEditPrice("")
+        setEditDescription("")
+      }
+    } catch {
+      // Error handling silently
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#F9F7F4" }}>
@@ -323,12 +416,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Plants - Horizontal Carousel */}
+      {/* Featured Plants - Grid */}
       <section id="products" className="pt-24 pb-16" style={{ backgroundColor: "#F9F7F4" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="font-serif text-3xl italic" style={{ color: "#2D3B36" }}>
-              Featured Plants
+              Catálogo de Plantas ({plants.length})
             </h2>
             <Link
               href="#all-plants"
@@ -339,49 +432,178 @@ export default function HomePage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+          <div className="mb-8">
+            <Input
+              type="text"
+              placeholder="Buscar plantas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="max-w-md rounded-full px-5"
+            />
+          </div>
 
-          <div className="relative">
-            <div
-              ref={carouselRef}
-              className="flex gap-5 overflow-x-auto scrollbar-hide pb-4"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              {featuredPlants.map((plant) => (
+          {plantsLoading ? (
+            <p className="text-center py-8" style={{ color: "#6B8E7F" }}>Cargando plantas...</p>
+          ) : plantsError ? (
+            <p className="text-center py-8 text-red-500">{plantsError}</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filteredPlants.map((plant) => (
                 <Card
                   key={plant.id}
-                  className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow flex-shrink-0"
-                  style={{ width: "200px" }}
+                  className="group bg-white rounded-2xl overflow-hidden border-0 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  <div className="relative aspect-square overflow-hidden">
-                    <Image
-                      src={plant.image}
-                      alt={plant.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-[10px] font-medium px-2 py-0.5 rounded`}>
-                      {plant.badge}
-                    </Badge>
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-medium text-sm mb-0.5" style={{ color: "#2D3B36" }}>
-                      {plant.name}
-                    </h3>
-                    <p className="font-semibold text-sm" style={{ color: "#1B5E3F" }}>
-                      {plant.price}
-                    </p>
+                  <div className="p-4">
+                    {editingId === plant.id ? (
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-xs font-medium mb-1" style={{ color: "#2D3B36" }}>
+                            Nombre
+                          </label>
+                          <Input
+                            type="text"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            className="w-full rounded-lg text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1" style={{ color: "#2D3B36" }}>
+                            Precio
+                          </label>
+                          <Input
+                            type="text"
+                            value={editPrice}
+                            onChange={(e) => setEditPrice(e.target.value)}
+                            className="w-full rounded-lg text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium mb-1" style={{ color: "#2D3B36" }}>
+                            Descripcion
+                          </label>
+                          <textarea
+                            value={editDescription}
+                            onChange={(e) => setEditDescription(e.target.value)}
+                            className="w-full rounded-lg border border-gray-200 p-2 text-sm"
+                            rows={2}
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => handleSaveEdit(plant.id)}
+                            disabled={isSaving}
+                            size="sm"
+                            className="rounded-full text-white"
+                            style={{ backgroundColor: "#1B5E3F" }}
+                          >
+                            {isSaving ? "Guardando..." : "Guardar"}
+                          </Button>
+                          <Button
+                            onClick={handleCancelEdit}
+                            disabled={isSaving}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full"
+                          >
+                            Cancelar
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <h3 className="font-medium text-base mb-1" style={{ color: "#2D3B36" }}>
+                          {plant.name}
+                        </h3>
+                        <p className="font-semibold text-lg mb-2" style={{ color: "#1B5E3F" }}>
+                          ${plant.price.toFixed(2)}
+                        </p>
+                        <p className="text-sm mb-3" style={{ color: "#6B8E7F" }}>
+                          {plant.description}
+                        </p>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => handleStartEdit(plant)}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full"
+                            style={{ color: "#1B5E3F", borderColor: "#1B5E3F" }}
+                          >
+                            Editar
+                          </Button>
+                          <Button
+                            onClick={() => handleDeletePlant(plant.id)}
+                            disabled={deletingId === plant.id}
+                            variant="outline"
+                            size="sm"
+                            className="rounded-full text-red-600 border-red-300 hover:bg-red-50"
+                          >
+                            {deletingId === plant.id ? "Eliminando..." : "Eliminar"}
+                          </Button>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </Card>
               ))}
             </div>
+          )}
+        </div>
+      </section>
 
-            {/* Carousel Navigation Arrow */}
-            <button
-              onClick={scrollCarousel}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition-shadow z-10"
-            >
-              <ChevronRight className="w-5 h-5" style={{ color: "#2D3B36" }} />
-            </button>
+      {/* Admin Section - Add New Plant */}
+      <section className="py-12" style={{ backgroundColor: "#F9F7F4" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-sm p-6 max-w-xl">
+            <h2 className="font-serif text-2xl mb-4 italic" style={{ color: "#2D3B36" }}>
+              Agregar Nueva Planta
+            </h2>
+            <form onSubmit={handleAddPlant} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Nombre
+                </label>
+                <Input
+                  type="text"
+                  value={newPlantName}
+                  onChange={(e) => setNewPlantName(e.target.value)}
+                  required
+                  className="w-full rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Precio
+                </label>
+                <Input
+                  type="text"
+                  value={newPlantPrice}
+                  onChange={(e) => setNewPlantPrice(e.target.value)}
+                  required
+                  className="w-full rounded-lg"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1" style={{ color: "#2D3B36" }}>
+                  Descripcion
+                </label>
+                <textarea
+                  value={newPlantDescription}
+                  onChange={(e) => setNewPlantDescription(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-gray-200 p-2 text-sm"
+                  rows={3}
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="rounded-full px-6 text-white"
+                style={{ backgroundColor: "#1B5E3F" }}
+              >
+                {isSubmitting ? "Agregando..." : "Agregar Planta"}
+              </Button>
+            </form>
           </div>
         </div>
       </section>
