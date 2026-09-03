@@ -76,7 +76,7 @@ export default function HomePage() {
       price: "$59.00",
       image: "/images/product-1.png",
       badge: "Best Seller",
-      badgeColor: "bg-amber-100 text-amber-800"
+      badgeColor: "bg-amber-500 text-white"
     },
     {
       id: 2,
@@ -84,7 +84,7 @@ export default function HomePage() {
       price: "$49.00",
       image: "/images/product-2.png",
       badge: "Low Light",
-      badgeColor: "bg-blue-100 text-blue-800"
+      badgeColor: "bg-indigo-500 text-white"
     },
     {
       id: 3,
@@ -92,7 +92,7 @@ export default function HomePage() {
       price: "$79.00",
       image: "/images/product-3.png",
       badge: "Easy Care",
-      badgeColor: "bg-green-100 text-green-800"
+      badgeColor: "bg-emerald-500 text-white"
     },
     {
       id: 4,
@@ -100,7 +100,7 @@ export default function HomePage() {
       price: "$29.00",
       image: "/images/product-1.png",
       badge: "Trending",
-      badgeColor: "bg-purple-100 text-purple-800"
+      badgeColor: "bg-purple-500 text-white"
     },
     {
       id: 5,
@@ -108,7 +108,7 @@ export default function HomePage() {
       price: "$39.00",
       image: "/images/product-2.png",
       badge: "Air Purifying",
-      badgeColor: "bg-teal-100 text-teal-800"
+      badgeColor: "bg-teal-500 text-white"
     }
   ]
 
@@ -138,17 +138,17 @@ export default function HomePage() {
       {/* Navigation */}
       <nav className="sticky top-0 z-50 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
-                <Leaf className="w-5 h-5 text-white" />
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
+                <Sprout className="w-6 h-6 text-white" />
               </div>
-              <span className="font-serif text-xl" style={{ color: "#2D3B36" }}>Project 1788412935117</span>
+              <span className="font-serif text-2xl font-medium" style={{ color: "#2D3B36" }}>PlantHub</span>
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-10">
               <Link href="#products" className="text-sm font-medium hover:opacity-70 transition-opacity" style={{ color: "#2D3B36" }}>
                 Shop Plants
               </Link>
@@ -167,14 +167,14 @@ export default function HomePage() {
             </div>
 
             {/* Right Icons */}
-            <div className="hidden md:flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+            <div className="hidden md:flex items-center gap-5">
+              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
                 <Search className="w-5 h-5" style={{ color: "#2D3B36" }} />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors">
                 <User className="w-5 h-5" style={{ color: "#2D3B36" }} />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors relative">
+              <button className="p-2.5 hover:bg-gray-100 rounded-full transition-colors relative">
                 <ShoppingCart className="w-5 h-5" style={{ color: "#2D3B36" }} />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 text-xs text-white rounded-full flex items-center justify-center" style={{ backgroundColor: "#1B5E3F" }}>
@@ -183,7 +183,7 @@ export default function HomePage() {
                 )}
               </button>
               <Button
-                className="rounded-full px-6 text-white"
+                className="rounded-full px-7 py-2.5 text-white font-medium"
                 style={{ backgroundColor: "#1B5E3F" }}
               >
                 Plant Finder
@@ -234,31 +234,44 @@ export default function HomePage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
+      <section className="relative overflow-hidden" style={{ backgroundColor: "#F9F7F4" }}>
+        {/* Left Decorative Plant */}
+        <div className="absolute left-0 top-0 bottom-0 w-1/4 md:w-1/3 lg:w-2/5">
           <Image
             src="/images/hero.png"
-            alt="Beautiful indoor plants"
+            alt="Decorative plant left"
             fill
-            className="object-cover"
+            className="object-cover object-right"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-white/80" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#F9F7F4]" />
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+        {/* Right Decorative Plant */}
+        <div className="absolute right-0 top-0 bottom-0 w-1/4 md:w-1/3 lg:w-2/5">
+          <Image
+            src="/images/feature.png"
+            alt="Decorative plant right"
+            fill
+            className="object-cover object-left"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-l from-transparent to-[#F9F7F4]" />
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 md:py-40">
           <div className="text-center max-w-3xl mx-auto">
             <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl mb-6" style={{ color: "#2D3B36" }}>
               Bring Life Home
             </h1>
-            <p className="text-lg md:text-xl mb-8" style={{ color: "#6B8E7F" }}>
+            <p className="text-lg md:text-xl mb-10" style={{ color: "#6B8E7F" }}>
               Beautiful plants. Expert care. Thoughtful service.
               <br />
               Everything you need to create a space that grows.
             </p>
             <Button
               size="lg"
-              className="rounded-full px-10 py-6 text-white text-lg"
+              className="rounded-full px-12 py-7 text-white text-lg font-medium shadow-lg"
               style={{ backgroundColor: "#1B5E3F" }}
               asChild
             >
@@ -269,12 +282,12 @@ export default function HomePage() {
       </section>
 
       {/* Stats Banner */}
-      <section className="bg-white py-8 shadow-sm">
+      <section className="bg-white py-10 shadow-sm border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F9F7F4" }}>
-                <Sprout className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
+                <Sprout className="w-7 h-7" style={{ color: "#1B5E3F" }} />
               </div>
               <div>
                 <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>10,000+</p>
@@ -283,8 +296,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F9F7F4" }}>
-                <Leaf className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
+                <Leaf className="w-7 h-7" style={{ color: "#1B5E3F" }} />
               </div>
               <div>
                 <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>500+</p>
@@ -293,8 +306,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F9F7F4" }}>
-                <Award className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
+                <Award className="w-7 h-7" style={{ color: "#1B5E3F" }} />
               </div>
               <div>
                 <div className="flex items-center gap-1">
@@ -306,8 +319,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F9F7F4" }}>
-                <Truck className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
+                <Truck className="w-7 h-7" style={{ color: "#1B5E3F" }} />
               </div>
               <div>
                 <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>Fast & Safe</p>
@@ -316,8 +329,8 @@ export default function HomePage() {
             </div>
 
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#F9F7F4" }}>
-                <Heart className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+              <div className="w-14 h-14 rounded-full flex items-center justify-center border-2" style={{ backgroundColor: "#E8F5E9", borderColor: "#1B5E3F" }}>
+                <Heart className="w-7 h-7" style={{ color: "#1B5E3F" }} />
               </div>
               <div>
                 <p className="text-2xl font-bold" style={{ color: "#2D3B36" }}>Sustainably</p>
@@ -358,7 +371,7 @@ export default function HomePage() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-medium`}>
+                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-semibold px-3 py-1 rounded-full shadow-sm`}>
                     {plant.badge}
                   </Badge>
                 </div>
@@ -383,7 +396,9 @@ export default function HomePage() {
             {/* Left Text Section */}
             <div className="md:col-span-3 flex flex-col justify-center">
               <div className="mb-4">
-                <Sprout className="w-8 h-8" style={{ color: "#1B5E3F" }} />
+                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: "#E8F5E9" }}>
+                  <Sprout className="w-6 h-6" style={{ color: "#1B5E3F" }} />
+                </div>
               </div>
               <h2 className="font-serif text-3xl md:text-4xl mb-4" style={{ color: "#2D3B36" }}>
                 Rooted in
@@ -403,83 +418,87 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Feature Cards */}
-            <div className="md:col-span-9 grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <Card className="bg-white rounded-2xl overflow-hidden border-0 shadow-sm">
-                <div className="relative h-32 overflow-hidden">
-                  <Image
-                    src="/images/feature.png"
-                    alt="Expertly Curated"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: "#F9F7F4" }}>
-                    <Leaf className="w-5 h-5" style={{ color: "#1B5E3F" }} />
+            {/* Feature Cards - Horizontal with overlays */}
+            <div className="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
+                <Image
+                  src="/images/feature.png"
+                  alt="Expertly Curated"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
+                      <Leaf className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-white text-lg">Expertly Curated</h3>
                   </div>
-                  <h3 className="font-semibold mb-2" style={{ color: "#2D3B36" }}>Expertly Curated</h3>
-                  <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                  <p className="text-sm text-white/90">
                     Handpicked plants for every space and skill level.
                   </p>
                 </div>
               </Card>
 
-              <Card className="bg-white rounded-2xl overflow-hidden border-0 shadow-sm">
-                <div className="relative h-32 overflow-hidden">
-                  <Image
-                    src="/images/product-1.png"
-                    alt="Plant Care Support"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: "#F9F7F4" }}>
-                    <Sun className="w-5 h-5" style={{ color: "#1B5E3F" }} />
+              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
+                <Image
+                  src="/images/product-1.png"
+                  alt="Plant Care Support"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
+                      <Sun className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-white text-lg">Plant Care Support</h3>
                   </div>
-                  <h3 className="font-semibold mb-2" style={{ color: "#2D3B36" }}>Plant Care Support</h3>
-                  <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                  <p className="text-sm text-white/90">
                     Guides, tips, and real people here to help your plants thrive.
                   </p>
                 </div>
               </Card>
 
-              <Card className="bg-white rounded-2xl overflow-hidden border-0 shadow-sm">
-                <div className="relative h-32 overflow-hidden">
-                  <Image
-                    src="/images/product-2.png"
-                    alt="Safe Delivery"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: "#F9F7F4" }}>
-                    <Package className="w-5 h-5" style={{ color: "#1B5E3F" }} />
+              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
+                <Image
+                  src="/images/product-2.png"
+                  alt="Safe Delivery"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
+                      <Package className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-white text-lg">Safe & Reliable Delivery</h3>
                   </div>
-                  <h3 className="font-semibold mb-2" style={{ color: "#2D3B36" }}>Safe & Reliable Delivery</h3>
-                  <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                  <p className="text-sm text-white/90">
                     Carefully packed and delivered fresh to your door.
                   </p>
                 </div>
               </Card>
 
-              <Card className="bg-white rounded-2xl overflow-hidden border-0 shadow-sm">
-                <div className="relative h-32 overflow-hidden">
-                  <Image
-                    src="/images/product-3.png"
-                    alt="Sustainability"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: "#F9F7F4" }}>
-                    <Heart className="w-5 h-5" style={{ color: "#1B5E3F" }} />
+              <Card className="relative h-48 rounded-2xl overflow-hidden border-0 shadow-sm group">
+                <Image
+                  src="/images/product-3.png"
+                  alt="Sustainability"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center bg-white/20 backdrop-blur-sm">
+                      <Heart className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="font-semibold text-white text-lg">Sustainability Promise</h3>
                   </div>
-                  <h3 className="font-semibold mb-2" style={{ color: "#2D3B36" }}>Sustainably Promise</h3>
-                  <p className="text-sm" style={{ color: "#6B8E7F" }}>
+                  <p className="text-sm text-white/90">
                     We are committed to people and the planet.
                   </p>
                 </div>
@@ -527,7 +546,7 @@ export default function HomePage() {
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-medium`}>
+                  <Badge className={`absolute top-3 left-3 ${plant.badgeColor} border-0 text-xs font-semibold px-3 py-1 rounded-full shadow-sm`}>
                     {plant.badge}
                   </Badge>
                   <button className="absolute top-3 right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
